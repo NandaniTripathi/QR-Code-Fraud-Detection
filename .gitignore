@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Virtual Environment
+backend/venv/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# React Build
+frontend/dist/
+frontend/build/
+
+# VS Code
+.vscode/
+
+# Environment Variables
+.env
+
+# Logs
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Python cache
+.pytest_cache/
+
+# Model Files
+*.pkl
+*.joblib
+
+# Database
+*.sqlite3
