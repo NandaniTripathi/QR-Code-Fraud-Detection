@@ -1,8 +1,24 @@
 import streamlit as st
-
 import requests
 import pandas as pd
+
 from dataset.operations import get_scan_history
+
+
+# =====================================
+# Page Configuration
+# =====================================
+
+st.set_page_config(
+    page_title="QR Shield",
+    page_icon="🛡️",
+    layout="wide"
+)
+
+
+# =====================================
+# Load Custom CSS
+# =====================================
 
 def load_css():
     with open("assets/styles.css") as f:
@@ -13,54 +29,10 @@ def load_css():
 
 load_css()
 
-# -----------------------------
 
-# Page Configuration
-
-# -----------------------------
-
-st.set_page_config(
-
-    page_title="QR Shield",
-
-    page_icon="🛡️",
-
-    layout="wide"
-
-)
-
-
-
-# -----------------------------
-
-# Sidebar
-
-# -----------------------------
-
-with st.sidebar:
-
-    st.markdown(
-    """
-    <div class='section-title'>
-        QR Shield
-    </div>
-
-    <div class='section-subtitle'>
-        AI-Powered QR Threat Intelligence Platform
-    </div>
-
-    """,
-    unsafe_allow_html=True
-)
-
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# -----------------------------
-
-# Main Page
-
-# -----------------------------
+# =====================================
+# Header
+# =====================================
 
 st.markdown("""
 <div class="main-title">
@@ -68,109 +40,100 @@ st.markdown("""
 </div>
 
 <div class="subtitle">
-AI Powered QR Code Security Scanner
+    AI Powered QR Code Security Scanner
 </div>
 """, unsafe_allow_html=True)
 
 
+st.markdown("<br>", unsafe_allow_html=True)
 
-left, center, right = st.columns([1,2,1])
+
+# =====================================
+# Upload Section
+# =====================================
+
+left_space, center, right_space = st.columns([1, 2, 1])
 
 with center:
 
+    st.markdown("""
+    <div class="section-title">
+        Upload QR Code
+    </div>
+    """, unsafe_allow_html=True)
+
     uploaded_file = st.file_uploader(
-        "Upload QR Code",
-        type=["png","jpg","jpeg"]
+        "",
+        type=["png", "jpg", "jpeg"],
+        label_visibility="collapsed"
     )
 
 
 
-# -----------------------------
-
+# =====================================
 # Upload Section
-
-# -----------------------------
+# =====================================
 
 if uploaded_file is not None:
 
+    preview_col, result_col = st.columns([1, 2])
 
+    # ---------------------------------
+    # QR Preview
+    # ---------------------------------
 
-    col1, col2 = st.columns([1, 2])
+    with preview_col:
 
-
-
-    # Left Column
-
-    with col1:
+        st.markdown("""
+        <div class="card-title">
+            QR Preview
+        </div>
+        """, unsafe_allow_html=True)
 
         st.image(
-
             uploaded_file,
-
-            caption="Uploaded QR Code",
-
             use_container_width=True
-
         )
 
+    # ---------------------------------
+    # Scan Button
+    # ---------------------------------
 
+    with result_col:
 
-    # Right Column
+        analyze = st.button(
+            "Analyze QR Code",
+            use_container_width=True
+        )
 
-    with col2:
-
-
-
-        if st.button("🔍 Analyze QR Code", use_container_width=True):
-
-
+        if analyze:
 
             progress = st.progress(0)
 
-
-
-            # Prepare file
-
             progress.progress(10)
 
-
-
             files = {
-
                 "file": (
-
                     uploaded_file.name,
-
                     uploaded_file.getvalue(),
-
                     uploaded_file.type
-
                 )
-
             }
-
-            # Send request
 
             progress.progress(40)
 
             response = requests.post(
-
                 "http://127.0.0.1:5000/scan",
-
                 files=files
-
             )
 
             progress.progress(100)
 
             if response.status_code == 200:
 
-
                 result = response.json()
 
-
-                st.success("Analysis Completed Successfully")
-
+                st.success("Analysis completed successfully.")
 
 
                 # -----------------------------
@@ -179,28 +142,38 @@ if uploaded_file is not None:
 
                 # -----------------------------
 
-                # -----------------------------
+                # =====================================
                 # Payload Information
-                # -----------------------------
-                st.subheader("📦 QR Payload")
+                # =====================================
+
+                st.subheader("Payload Information")
 
                 payload_type = result["payload_type"]
 
-                st.metric("Payload Type", payload_type)
+                payload_col1, payload_col2 = st.columns([1, 3])
 
-                st.code(result["payload_data"])
+                with payload_col1:
+                    st.metric(
+                        "Payload Type",
+                        payload_type
+                    )
 
-                # Only show button for URLs
+                with payload_col2:
+                    st.code(result["payload_data"])
+
+                # Show button only for URL payloads
                 if payload_type == "URL":
 
                     st.link_button(
-                        "🌐 Open Website",
-                        result["decoded_url"]
-        )
+                        "Open Website",
+                        result["decoded_url"],
+                        use_container_width=True
+                    )
 
                 st.divider()
 
-                if result["payload_type"] == "URL":
+                # Continue with URL-specific analysis
+                if payload_type == "URL":
 
                 # -----------------------------
 
@@ -244,15 +217,15 @@ if uploaded_file is not None:
 
                     if level == "Low":
 
-                       level_col.success("🟢 LOW")
+                       level_col.success("LOW")
 
                     elif level == "Medium":
 
-                        level_col.warning("🟡 MEDIUM")
+                        level_col.warning("MEDIUM")
 
                     else:
 
-                        level_col.error("🔴 HIGH")
+                        level_col.error("HIGH")
 
 
 
@@ -272,21 +245,17 @@ if uploaded_file is not None:
 
                 # -----------------------------
 
-                    st.subheader("🛡️ Threat Indicators")
-
-
+                    st.subheader("Threat Indicators")
 
                     if result["reasons"]:
 
                         for reason in result["reasons"]:
 
-                            st.write("✅", reason)
+                            st.markdown(f"- {reason}")
 
                     else:
 
-                        st.success("No suspicious indicators detected.")
-
-
+                        st.info("No suspicious indicators were detected.")
 
                     st.divider()
 
@@ -295,7 +264,7 @@ if uploaded_file is not None:
                 # -----------------------------
                 # VirusTotal
                 # -----------------------------
-                    st.subheader("🦠 VirusTotal Results")
+                    st.subheader("VirusTotal Results")
 
                     vt = result["virustotal"]
 
@@ -310,17 +279,28 @@ if uploaded_file is not None:
                 # -----------------------------
 # Downloadable File Scan
 # -----------------------------
-                    st.subheader("📂 Downloadable File Scan")
+                    st.subheader("Downloadable File Scan")
 
                     file_scan = result["file_scan"]
 
                     if file_scan["success"]:
 
-                        c1, c2, c3 = st.columns(3)
+                        malicious_col, suspicious_col, harmless_col = st.columns(3)
 
-                        c1.metric("Malicious", file_scan["malicious"])
-                        c2.metric("Suspicious", file_scan["suspicious"])
-                        c3.metric("Harmless", file_scan["harmless"])
+                        malicious_col.metric(
+                            "Malicious",
+                            file_scan["malicious"]
+                    )
+
+                        suspicious_col.metric(
+                            "Suspicious",
+                            file_scan["suspicious"]
+               )
+
+                        harmless_col.metric(
+                            "Harmless",
+                            file_scan["harmless"]
+      )
 
                     else:
 
@@ -332,7 +312,7 @@ if uploaded_file is not None:
 # -----------------------------
 # IP Geolocation
 # -----------------------------
-                    st.subheader("🌍 IP Geolocation")
+                    st.subheader("IP Geolocation")
 
                     ip = result["ip_information"]
 
@@ -360,7 +340,7 @@ if uploaded_file is not None:
 # -----------------------------
 # Hosting Provider
 # -----------------------------
-                    st.subheader("🏢 Hosting Provider")
+                    st.subheader("Hosting Provider")
 
                     host = result["hosting_provider"]
 
@@ -375,24 +355,24 @@ if uploaded_file is not None:
 # -----------------------------
 # Recommendation
 # -----------------------------
-                    st.subheader("💡 Recommendation")
+                    st.subheader("Recommendation")
 
                     if result["risk_score"] < 40:
 
                         st.success(
-                            "✅ This QR Code appears safe."
+                            "This QR Code appears safe."
                         )
 
                     elif result["risk_score"] < 70:
 
                         st.warning(
-                            "⚠️ Be cautious before opening this URL."
+                            "Be cautious before opening this URL."
                         )
 
                     else:
 
                         st.error(
-                           "🚨 High Risk! Avoid opening this QR Code."
+                           "High Risk! Avoid opening this QR Code."
                        )
 
 
@@ -404,28 +384,28 @@ if uploaded_file is not None:
                     payload_type = result["payload_type"]
 
                     if payload_type == "WiFi":
-                       st.success("📶 WiFi Configuration QR Code detected.")
+                       st.success("WiFi Configuration QR Code detected.")
 
                     elif payload_type == "vCard":
-                       st.success("👤 Contact Card detected.")
+                       st.success("Contact Card detected.")
 
                     elif payload_type == "Email":
-                       st.success("📧 Email QR Code detected.")
+                       st.success("Email QR Code detected.")
 
                     elif payload_type == "SMS":
-                       st.success("💬 SMS QR Code detected.")
+                       st.success("SMS QR Code detected.")
 
                     elif payload_type == "Phone":
-                       st.success("📞 Phone Number QR Code detected.")
+                       st.success("Phone Number QR Code detected.")
 
                     elif payload_type == "Location":
-                       st.success("📍 Location QR Code detected.")
+                       st.success("Location QR Code detected.")
 
                     elif payload_type == "UPI Payment":
-                       st.success("💳 UPI Payment QR Code detected.")
+                       st.success("UPI Payment QR Code detected.")
 
                     else:
-                       st.success("📝 Plain Text QR Code detected.")
+                       st.success("Plain Text QR Code detected.")
 
 
 
@@ -435,7 +415,7 @@ if uploaded_file is not None:
 # -----------------------------
 
 st.markdown("---")
-st.header("📜 Scan History")
+st.subheader("Scan History")
 
 history = get_scan_history()
 
@@ -460,7 +440,7 @@ if history:
     )
 
 else:
-    st.info("No scans available yet.")
+    st.info("No scan history available.")
 # -----------------------------
 
 # Footer
@@ -469,8 +449,10 @@ else:
 
 st.markdown("---")
 
-st.caption(
-
-    "Developed by Nandani Tripathi | AI + Cybersecurity Project"
-
+st.markdown(
+    "<p style='text-align:center;color:gray;'>"
+    "QR Shield • AI Powered QR Code Security Scanner"
+    "</p>",
+    unsafe_allow_html=True
 )
+
