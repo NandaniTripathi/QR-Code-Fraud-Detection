@@ -1,0 +1,276 @@
+/* =========================================================
+   QR Shield - Professional Dashboard Theme
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html,
+body,
+[class*="css"]{
+    font-family: 'Inter', sans-serif;
+}
+
+/* =========================================================
+   Main Background
+========================================================= */
+
+.stApp{
+    background:#F5F7FB;
+}
+
+
+/* =========================================================
+   Sidebar
+========================================================= */
+
+section[data-testid="stSidebar"]{
+    background:#FFFFFF;
+    border-right:1px solid #E5E7EB;
+}
+
+
+/* =========================================================
+   Main Title
+========================================================= */
+
+.main-title{
+    font-size:42px;
+    font-weight:700;
+    color:#111827;
+    text-align:center;
+    margin-bottom:6px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#6B7280;
+    font-size:18px;
+    margin-bottom:35px;
+}
+
+
+/* =========================================================
+   Sidebar Titles
+========================================================= */
+
+.section-title{
+    font-size:26px;
+    font-weight:700;
+    color:#111827;
+}
+
+.section-subtitle{
+    color:#6B7280;
+    font-size:14px;
+    margin-top:8px;
+    margin-bottom:20px;
+}
+
+
+/* =========================================================
+   Cards
+========================================================= */
+
+.card{
+
+    background:#FFFFFF;
+
+    padding:22px;
+
+    border-radius:18px;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.05);
+
+    margin-bottom:22px;
+}
+
+
+/* =========================================================
+   Metric Card
+========================================================= */
+
+.metric-card{
+
+    background:#FFFFFF;
+
+    border-radius:18px;
+
+    border:1px solid #E5E7EB;
+
+    padding:22px;
+
+    text-align:center;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.05);
+
+    transition:.25s;
+}
+
+.metric-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 10px 24px rgba(0,0,0,.08);
+}
+
+.metric-title{
+
+    color:#6B7280;
+
+    font-size:15px;
+
+    margin-bottom:12px;
+}
+
+.metric-value{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:#111827;
+}
+
+.metric-subtitle{
+
+    color:#2563EB;
+
+    font-size:14px;
+
+    margin-top:10px;
+}
+
+
+/* =========================================================
+   Upload Area
+========================================================= */
+
+[data-testid="stFileUploader"]{
+
+    border:2px dashed #CBD5E1;
+
+    border-radius:18px;
+
+    background:#FFFFFF;
+
+    padding:35px;
+}
+
+
+/* =========================================================
+   Buttons
+========================================================= */
+
+.stButton>button{
+
+    width:100%;
+
+    border-radius:12px;
+
+    height:48px;
+
+    background:#2563EB;
+
+    color:white;
+
+    border:none;
+
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.stButton>button:hover{
+
+    background:#1D4ED8;
+}
+
+
+/* =========================================================
+   Metrics
+========================================================= */
+
+[data-testid="metric-container"]{
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    box-shadow:
+        0 5px 12px rgba(0,0,0,.05);
+}
+
+
+/* =========================================================
+   Code Blocks
+========================================================= */
+
+code{
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   Tables
+========================================================= */
+
+[data-testid="stDataFrame"]{
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    border:1px solid #E5E7EB;
+}
+
+
+/* =========================================================
+   Progress Bar
+========================================================= */
+
+.stProgress>div>div>div>div{
+
+    background:#2563EB;
+}
+
+
+/* =========================================================
+   Divider
+========================================================= */
+
+hr{
+
+    margin-top:28px;
+
+    margin-bottom:28px;
+
+    border:none;
+
+    border-top:1px solid #E5E7EB;
+}
+
+
+/* =========================================================
+   Footer
+========================================================= */
+
+.footer{
+
+    text-align:center;
+
+    color:#6B7280;
+
+    font-size:14px;
+
+    margin-top:40px;
+}
