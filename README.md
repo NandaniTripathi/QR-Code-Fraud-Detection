@@ -101,7 +101,7 @@ The application generates a numerical risk score based on detected security indi
 
 The result is presented as:
 
-```text
+   text
 Risk Score
      |
      v
